@@ -1,0 +1,31 @@
+---
+- name: My First playbook
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Install package
+    package:
+      name: '{{ list }}'
+      - httpd
+      - epel-release
+      - yum-utils
+      - php
+      - mysql
+      - mariadb
+    state: present
+
+  - name: Install Telnet
+    package:
+      name: telnet
+      state: installed 
+
+  - name: Add Bob
+    user:
+      name: httpd
+      state: absent 
+
+  - name: Add Tom
+    user:
+      name: tom
+      state: present 
