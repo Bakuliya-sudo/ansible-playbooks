@@ -4,16 +4,16 @@
   become: true
   become_method: sudo
   tasks:
-  - name: Install package
-    package:
-      name: '{{ list }}'
-      - httpd
-      - epel-release
-      - yum-utils
-      - php
-      - mysql
-      - mariadb
-    state: present
+  - name: Install a list of packages
+    yum:
+      name:
+        - httpd
+        - epel-release
+        - yum-utils
+        - php
+        - mysql
+        - mariadb
+      state: present
 
   - name: Install Telnet
     package:
