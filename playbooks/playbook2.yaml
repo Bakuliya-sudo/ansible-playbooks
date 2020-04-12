@@ -15,17 +15,13 @@
         - mariadb
       state: present
 
-  - name: Install Telnet
-    package:
-      name: telnet
-      state: installed 
-
   - name: Add Bob
     user:
-      name: httpd
-      state: absent 
+      name: 
+        - Bob
+        - ben
+        - lisa
+        - katty
+      generate_ssh_key: yes
+      state: present  
 
-  - name: Add Tom
-    user:
-      name: tom
-      state: present 
