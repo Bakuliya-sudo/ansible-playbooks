@@ -17,6 +17,7 @@
   - name : Install httpd PHP and MySql
     shell: " yum install php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
 
+
   - name: Install remi-release-7
     shell: " yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
     ignore_errors: true
@@ -82,7 +83,7 @@
   - name: restart httpd
     systemd: 
       name: httpd 
-      state: started
+      state: restarted
       enabled: yes 
  
 
