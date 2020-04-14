@@ -1,29 +1,90 @@
 ---
-- name: My First playbook
+- name: My Wordpress playbook
   hosts: all
   become: true
   become_method: sudo
   tasks:
-  - name: Install a list of packages
+  - name: Install httpd, epel-release, yum-utils, unzip and mariadb-server
     yum:
       name:
         - httpd
         - epel-release
         - yum-utils
-        - php
-        - mysql
-        - mariadb
+        - unzip
+        - mariadb-server
       state: present
 
-  - name: Add Bob
+  - name : Install httpd PHP and MySql
+    shell: " yum install php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
+
+  - name: Install remi-release-7
+    shell: " yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
+    ignore_errors: true
+
+  - name: enabled remi-php72
+    shell: " yum-config-manager --enable remi-php72"
+
+  - name: Create a 2048-bit SSH key for user bob in ~bob/.ssh/id_rsa
     user:
-      name: 
-        - Bob
-        - ben
-        - lisa
-        - katty
+      name: bob
       generate_ssh_key: yes
       ssh_key_bits: 2048
       ssh_key_file: .ssh/id_rsa
-      state: present  
 
+  - name: Create a 2048-bit SSH key for user lisa in ~lisa/.ssh/id_rsa
+    user:
+      name: lisa
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+  
+  - name: Create a 2048-bit SSH key for user katty in ~katty/.ssh/id_rsa
+    user:
+      name: katty
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+
+  - name: Create a 2048-bit SSH key for user ben in ~ben/.ssh/id_rsa
+    user:
+      name: ben
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+
+  - name: Download WordPress  
+    get_url: 
+      url: https://wordpress.org/wordpress-5.2.1.tar.gz
+      dest: /tmp
+      validate_certs: no 
+
+  - name: Extract WordPress  
+    unarchive: 
+      src: "/tmp/wordpress-5.2.1.tar.gz" 
+      dest: "/var/www/html"
+     # sudo: yes
+      remote_src: yes
+
+  - name: Move files to html folder
+    shell: "mv /var/www/html/wordpress/* /var/www/html"
+
+  - name: create a folder 
+    shell: mkdir -p /etc/httpd/sites-enabled/ && cd /etc/httpd/sites-enabled/ && touch wordpress.conf
+
+  - name: Update wordpess site
+    lineinfile: 
+      dest: /etc/httpd/sites-enabled/wordpress.conf 
+      regexp: "(.)+DocumentRoot /var/www/html"
+      line: "DocumentRoot /var/www/html/wordpress"
+    notify:
+      - restart httpd
+    
+  - name: restart httpd
+    systemd: 
+      name: httpd 
+      state: started
+      enabled: yes 
+ 
+
+   
+  
