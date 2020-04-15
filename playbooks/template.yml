@@ -1,0 +1,8 @@
+---
+- name: Manage files
+  hosts: all
+  become: true
+  become_method: sudo
+  user: centos
+  tasks:
+  - name:
