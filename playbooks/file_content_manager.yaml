@@ -8,5 +8,5 @@
   - name: Manage etc motd
     lineinfile: 
       path: "/etc/motd"
-      line: "This is changed"
+      line: "This is changed second time"
     
