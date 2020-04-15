@@ -1,0 +1,22 @@
+---  
+- name: Create ec2 instance playbook
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+      keypair: "ansible"
+      instance_type: "t2.micro"
+      image: "ami-05461b77b27de7640"
+      group: "CentOS 7 -x86_64- - with Updates HVM-2002_01-AutogenByAWSMP-"
+      region: "eu-west-2"
+  tasks:
+    - name: new EC2 instance
+      ec2: image={{ image }}
+           instance_type={{ instance_type }}
+           keypair={{ keypair }}
+           region={{ region }}
+           group={{ group }}
+           wait=true
+      register: ec2_info
+
+  
